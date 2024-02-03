@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from sklearn import datasets, linear_model, model_selection
+from sklearn import model_selection
 # from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
