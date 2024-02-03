@@ -2,15 +2,20 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 from sklearn import datasets, linear_model, model_selection
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.preprocessing import LabelEncoder
 from sklearn.svm import SVC
+from sklearn.naive_bayes import MultinomialNB
 import streamlit as st
 
-
-st.title("Language Identification Model")
-
-st.write("This model can classify up to 17 different languages these are: English, Malayalam, Hindi, Tamil, Portugeese, French, Dutch, Spanish, Greek, Russian, Danish, Italian, Turkish, Sweedish, Arabic, German, Kannada.")
+st.set_page_config(
+    page_title="Langauge Identification Model",
+    page_icon="🧊",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 df = pd.read_csv("dataset.csv")
 
@@ -24,15 +29,28 @@ encoder = LabelEncoder()
 X = vectorizer.fit_transform(texts)
 y = encoder.fit_transform(languages)
 
-X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=0.3)
+X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=0.2, random_state=4)
 
-clf = SVC()  # Using Support Vector Classifier as an example
-clf.fit(X_train, y_train)
+@st.cache_data()
+def load_model():
+    model = MultinomialNB()
+    # model = SVC() perfoms very poor for this task
+    model.fit(X_train, y_train)  # Assuming X_train and y_train are pre-defined
+    return model
 
-y_pred = clf.predict(X_test)
+clf = load_model()
+
+st.markdown("<h1 style='text-align: center; color: white;'>Language Identification Model</h1>", unsafe_allow_html=True)
+
+
+st.write("This model can classify up to 17 different languages these are: English, Malayalam, Hindi, Tamil, Portugeese, French, Dutch, Spanish, Greek, Russian, Danish, Italian, Turkish, Sweedish, Arabic, German, Kannada.")
+
+st.write("[![Star](https://img.shields.io/github/stars/samuelajala01/language_identification_model.svg?logo=github&style=social)](https://gitHub.com/samuelajala01/language_identification_model)")
+
+st.write("[![Follow](https://img.shields.io/twitter/follow/samuelajala01?style=social)](https://www.twitter.com/samuelajala01)")
 
 # New text
-paragraph_input = st.text_area("Enter text to be identified: ")
+paragraph_input = st.text_area("Enter text/sentence to be identified: ")
 
 # Make prediction when the user clicks the button
 if st.button("Predict Language"):
@@ -50,3 +68,31 @@ if st.button("Predict Language"):
         st.write(f"Predicted Language: {predicted_language[0]}")
     else:
         st.warning("Please enter text before predicting.")
+
+
+
+
+# ... (rest of your code)
+
+# Make predictions on the test set
+y_pred = clf.predict(X_test)
+
+# Evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+classification_rep = classification_report(y_test, y_pred, target_names=encoder.classes_)
+conf_matrix = confusion_matrix(y_test, y_pred)
+
+# Display the evaluation metrics
+# st.write(f"Accuracy: {accuracy:.4f}")
+# st.write("Confusion Matrix:")
+# st.write(conf_matrix)
+
+
+st.markdown("<h2 style='color:#82c9ff';>Dataset Statistics</h2>",unsafe_allow_html=True)
+
+st.subheader("Class Distribution")
+st.bar_chart(df['Language'].value_counts())
+
+st.write(f"Number of Samples: {len(df)}")
+st.write(df['Language'].value_counts())
+
