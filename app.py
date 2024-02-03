@@ -1,12 +1,11 @@
 import pandas as pd
 import numpy as np
-import seaborn as sns
 from sklearn import datasets, linear_model, model_selection
-from sklearn.feature_extraction.text import TfidfVectorizer
+# from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.preprocessing import LabelEncoder
-from sklearn.svm import SVC
+# from sklearn.svm import SVC
 from sklearn.naive_bayes import MultinomialNB
 import streamlit as st
 
