@@ -52,7 +52,7 @@ st.write("[![Follow](https://img.shields.io/twitter/follow/samuelajala01?style=s
 paragraph_input = st.text_area("Enter text/sentence to be identified: ")
 
 # Make prediction when the user clicks the button
-if st.button("Predict Language"):
+if st.button("Identify Language"):
     if paragraph_input:
         # Apply the same vectorizer and label encoder transformations to new data
         X_new = vectorizer.transform([paragraph_input])  # Assuming vectorizer is already defined
@@ -78,7 +78,7 @@ y_pred = clf.predict(X_test)
 
 # Evaluate the model
 accuracy = accuracy_score(y_test, y_pred)
-classification_rep = classification_report(y_test, y_pred, target_names=encoder.classes_)
+# classification_rep = classification_report(y_test, y_pred, target_names=encoder.classes_)
 conf_matrix = confusion_matrix(y_test, y_pred)
 
 # Display the evaluation metrics
